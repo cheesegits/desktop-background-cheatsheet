@@ -29,6 +29,8 @@ const getFileFromUser = () => {
 };
 
 app.on('ready', () => {
+    const { screen } = require('electron');
+
     const contextMenu = Menu.buildFromTemplate([{
         label: 'Set Background Cheatsheet',
         click: () => {
@@ -42,17 +44,26 @@ app.on('ready', () => {
         getFileFromUser();
     });
 
+    const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+    console.log(screenWidth);
+    console.log(screenHeight);
+    const mainWindowHeight = 800;
+    const mainWindowWidth = 800;
+
+    const mainWindowX = screenWidth / 2 - mainWindowWidth / 2;
+    const mainWindowY = screenHeight / 2 - mainWindowHeight / 2;
+
+
+
     tray = new Tray('Google-Chrome-Google-Chrome.ico');
     tray.setToolTip('~~MAKE NEW ICON~~');
     tray.setContextMenu(contextMenu);
 
-    mainWindow = new BrowserWindow({ show: false, width: 110, height: 100, x: 2216, y: 1588 });
+    mainWindow = new BrowserWindow({ show: true, width: mainWindowWidth, height: mainWindowHeight, x: mainWindowX, y: mainWindowY }); // webPreferences: { nodeIntegration: true },
     mainWindow.loadFile(`${__dirname}/index.html`);
 
-    console.log(tray.getBounds()); // { x: 2248, y: 1688, width: 32, height: 40 }
-    console.log(mainWindow.getBounds()); // { x: 1385, y: 564, width: 301, height: 600 }
-
-
+    // console.log(tray.getBounds()); // { x: 2248, y: 1688, width: 32, height: 40 }
+    console.log(mainWindow.getBounds());
 
     // mainWindow.once('ready-to-show', () => {
     //     mainWindow.show();
