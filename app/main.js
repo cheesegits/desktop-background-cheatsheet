@@ -1,7 +1,11 @@
-// const fs = require('fs');
+const fs = require('fs');
 const path = require('path');
 
 const { app, BrowserWindow, dialog, ipcMain, Tray, Menu, globalShortcut } = require('electron');
+
+const wallpaper = require('wallpaper');
+
+const backgroundDirectory = path.join(__dirname, '../assets');
 
 let mainWindow = null;
 let tray = null;
@@ -42,6 +46,7 @@ app.on('ready', () => {
 
     mainWindow = new BrowserWindow({ show: true, width: mainWindowWidth, height: mainWindowHeight, x: mainWindowX, y: mainWindowY }); // webPreferences: { nodeIntegration: true },
     mainWindow.loadFile(`${__dirname}/index.html`);
+    mainWindow.webContents.openDevTools();
 
     globalShortcut.register('Shift+Alt+2', () => {
         getFileFromUser();
@@ -61,3 +66,15 @@ ipcMain.on('asynchronous-message', (event, arg) => {
     getFileFromUser();
     event.sender.send('asynchronous-reply', 'pong');
 });
+
+ipcMain.on('input-change', (event, backgroundName) => { // event not used
+    fs.readdir(backgroundDirectory, async(error, files) => {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log(files);
+            const image = files.find((name) => name === backgroundName);
+            await wallpaper.set(path.join(backgroundDirectory, image));
+        }
+    });
+})
