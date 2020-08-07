@@ -7,67 +7,51 @@ const wallpaper = require('wallpaper');
 
 const backgroundDirectory = path.join(__dirname, '../assets');
 
+let desktopWindow = null;
 let mainWindow = null;
 let tray = null;
 
-const getFileFromUser = () => {
-    const files = dialog.showOpenDialog({
-        defaultPath: path.join(__dirname, '../assets'),
-        properties: ['openFile'],
-        title: 'Set Background Cheatsheet',
-        filters: [
-            { name: 'JPEG', extensions: ['jpg'] }
-        ]
-    });
-    if (!files) return;
-    const file = files[0];
-    console.log("Opened: " + file);
-    mainWindow.show();
-};
 
 app.on('ready', () => {
-    const { screen } = require('electron'); // could not require() at the top of file, but this worked around
+    const { screen } = require('electron'); // could not require() at the top of file, but this served as a work around
 
     const contextMenu = Menu.buildFromTemplate([{
         label: 'Set Background Cheatsheet',
         click: () => {
+            desktopWindow.show();
             mainWindow.show();
-            getFileFromUser();
         },
     }]);
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
 
-    const mainWindowHeight = 800;
-    const mainWindowWidth = 800;
+    desktopWindow = new BrowserWindow({ show: false, width: screenWidth, height: screenHeight, backgroundColor: '#2e2c29', opacity: 0.4, focusable: false, frame: false });
 
-    const mainWindowX = screenWidth / 2 - mainWindowWidth / 2;
-    const mainWindowY = screenHeight / 2 - mainWindowHeight / 2;
-
-    mainWindow = new BrowserWindow({ show: true, width: mainWindowWidth, height: mainWindowHeight, x: mainWindowX, y: mainWindowY }); // webPreferences: { nodeIntegration: true },
+    mainWindow = new BrowserWindow({ show: false, width: 800, height: 800, center: true, backgroundColor: '#2e2c29', parent: desktopWindow, frame: false }); // webPreferences: { nodeIntegration: true }
     mainWindow.loadFile(`${__dirname}/index.html`);
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     globalShortcut.register('Shift+Alt+2', () => {
-        getFileFromUser();
+        if (mainWindow.isFocused()) {
+            desktopWindow.hide();
+            mainWindow.minimize();
+            mainWindow.hide();
+        } else {
+            desktopWindow.show();
+            mainWindow.show();
+        }
     });
 
     tray = new Tray('Google-Chrome-Google-Chrome.ico');
     tray.setToolTip('~~MAKE NEW ICON~~');
     tray.setContextMenu(contextMenu);
 
-    // mainWindow.once('ready-to-show', () => {
-    //     mainWindow.show();
-    // });
+    //     mainWindow.once('ready-to-show', () => {
+    //     });
 });
 
-ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log(arg); // "ping"
-    getFileFromUser();
-    event.sender.send('asynchronous-reply', 'pong');
-});
 
-ipcMain.on('input-change', (event, backgroundName) => { // event not used
+ipcMain.on('input-change', (event, backgroundName) => {
     fs.readdir(backgroundDirectory, async(error, files) => {
         if (error) {
             console.log(error);
@@ -75,7 +59,31 @@ ipcMain.on('input-change', (event, backgroundName) => { // event not used
             console.log(files);
             const image = files.find((name) => name === backgroundName);
             await wallpaper.set(path.join(backgroundDirectory, image));
+            desktopWindow.hide();
+            mainWindow.minimize(); // minimizing restores focus to window
+            mainWindow.hide(); // hiding stops mainWindow stops mainWindow from appearing as an open window in Windows alt+tab
             event.sender.send('background-set', files);
         }
     });
 });
+
+// const getFileFromUser = () => {
+//     const files = dialog.showOpenDialog({
+//         defaultPath: path.join(__dirname, '../assets'),
+//         properties: ['openFile'],
+//         title: 'Set Background Cheatsheet',
+//         filters: [
+//             { name: 'JPEG', extensions: ['jpg'] }
+//         ]
+//     });
+//     if (!files) return;
+//     const file = files[0];
+//     console.log("Opened: " + file);
+//     mainWindow.show();
+// };
+
+// ipcMain.on('asynchronous-message', (event, arg) => {
+//     console.log(arg); // "ping"
+//     getFileFromUser();
+//     event.sender.send('asynchronous-reply', 'pong');
+// });
