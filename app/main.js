@@ -75,6 +75,7 @@ ipcMain.on('input-change', (event, backgroundName) => { // event not used
             console.log(files);
             const image = files.find((name) => name === backgroundName);
             await wallpaper.set(path.join(backgroundDirectory, image));
+            event.sender.send('background-set', files);
         }
     });
-})
+});
