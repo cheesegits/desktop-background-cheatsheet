@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { app, BrowserWindow, dialog, ipcMain, Tray, Menu, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron');
 
 const wallpaper = require('wallpaper');
 
