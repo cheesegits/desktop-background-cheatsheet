@@ -45,9 +45,6 @@ app.on('ready', () => {
     tray = new Tray('Google-Chrome-Google-Chrome.ico');
     tray.setToolTip('~~MAKE NEW ICON~~');
     tray.setContextMenu(contextMenu);
-
-    //     mainWindow.once('ready-to-show', () => {
-    //     });
 });
 
 
@@ -60,30 +57,9 @@ ipcMain.on('input-change', (event, backgroundName) => {
             const image = files.find((name) => name === backgroundName);
             await wallpaper.set(path.join(backgroundDirectory, image));
             desktopWindow.hide();
-            mainWindow.minimize(); // minimizing restores focus to window
-            mainWindow.hide(); // hiding stops mainWindow stops mainWindow from appearing as an open window in Windows alt+tab
+            mainWindow.minimize();
+            mainWindow.hide();
             event.sender.send('background-set', files);
         }
     });
 });
-
-// const getFileFromUser = () => {
-//     const files = dialog.showOpenDialog({
-//         defaultPath: path.join(__dirname, '../assets'),
-//         properties: ['openFile'],
-//         title: 'Set Background Cheatsheet',
-//         filters: [
-//             { name: 'JPEG', extensions: ['jpg'] }
-//         ]
-//     });
-//     if (!files) return;
-//     const file = files[0];
-//     console.log("Opened: " + file);
-//     mainWindow.show();
-// };
-
-// ipcMain.on('asynchronous-message', (event, arg) => {
-//     console.log(arg); // "ping"
-//     getFileFromUser();
-//     event.sender.send('asynchronous-reply', 'pong');
-// });
