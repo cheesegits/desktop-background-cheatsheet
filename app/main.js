@@ -4,6 +4,7 @@ const path = require('path');
 const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron');
 
 const wallpaper = require('wallpaper');
+const ks = require('node-key-sender');
 
 const backgroundDirectory = path.join(__dirname, '../assets');
 
@@ -27,7 +28,7 @@ app.on('ready', () => {
 
     desktopWindow = new BrowserWindow({ show: false, width: screenWidth, height: screenHeight, backgroundColor: '#2e2c29', opacity: 0.4, focusable: false, frame: false });
 
-    mainWindow = new BrowserWindow({ show: false, width: 800, height: 800, center: true, backgroundColor: '#2e2c29', parent: desktopWindow, frame: false }); // webPreferences: { nodeIntegration: true }
+    mainWindow = new BrowserWindow({ show: false, width: 800, height: 800, center: true, backgroundColor: '#2e2c29', parent: desktopWindow, webPreferences: { nodeIntegration: true }, frame: false });
     mainWindow.loadFile(`${__dirname}/index.html`);
     // mainWindow.webContents.openDevTools();
 
@@ -47,19 +48,21 @@ app.on('ready', () => {
     tray.setContextMenu(contextMenu);
 });
 
-
 ipcMain.on('input-change', (event, backgroundName) => {
-    fs.readdir(backgroundDirectory, async(error, files) => {
+    fs.readdir(backgroundDirectory, (error, files) => {
         if (error) {
             console.log(error);
         } else {
-            console.log(files);
             const image = files.find((name) => name === backgroundName);
-            await wallpaper.set(path.join(backgroundDirectory, image));
-            desktopWindow.hide();
-            mainWindow.minimize();
-            mainWindow.hide();
-            event.sender.send('background-set', files);
+            wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
+                desktopWindow.hide();
+                mainWindow.minimize();
+                mainWindow.hide();
+                event.sender.send('background-set', files);
+                ks.sendCombination(['windows', 'd']).then((a) => {});
+            }).catch((error) => {
+                console.log(error);
+            });
         }
     });
 });
