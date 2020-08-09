@@ -26,9 +26,26 @@ app.on('ready', () => {
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
 
-    desktopWindow = new BrowserWindow({ show: false, width: screenWidth, height: screenHeight, backgroundColor: '#2e2c29', opacity: 0.4, focusable: false, frame: false });
+    desktopWindow = new BrowserWindow({
+        show: false,
+        width: screenWidth,
+        height: screenHeight,
+        backgroundColor: '#2e2c29',
+        opacity: 0.4,
+        focusable: false,
+        frame: false,
+    });
 
-    mainWindow = new BrowserWindow({ show: false, width: 800, height: 800, center: true, backgroundColor: '#2e2c29', parent: desktopWindow, webPreferences: { nodeIntegration: true }, frame: false });
+    mainWindow = new BrowserWindow({
+        show: false,
+        width: 800,
+        height: 800,
+        center: true,
+        backgroundColor: '#2e2c29',
+        parent: desktopWindow,
+        webPreferences: { nodeIntegration: true },
+        frame: false,
+    });
     mainWindow.loadFile(`${__dirname}/index.html`);
     // mainWindow.webContents.openDevTools();
 

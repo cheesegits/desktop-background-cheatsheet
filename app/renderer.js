@@ -3,7 +3,6 @@ const { ipcRenderer } = require('electron');
 const input = document.querySelector('.input-field');
 const list = document.querySelector('#file-list');
 
-
 input.addEventListener('change', (event) => {
     ipcRenderer.send('input-change', event.target.value);
     ipcRenderer.on('background-set', (event, files) => {
