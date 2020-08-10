@@ -3,8 +3,9 @@ const path = require('path');
 
 const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron');
 
-const wallpaper = require('wallpaper');
-const ks = require('node-key-sender');
+// const wallpaper = require('wallpaper');
+// const ks = require('node-key-sender');
+// const { dir } = require('console');
 
 const backgroundDirectory = path.join(__dirname, '../assets');
 
@@ -25,6 +26,8 @@ app.on('ready', () => {
     }]);
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+
+    let directoryFiles = [];
 
     desktopWindow = new BrowserWindow({
         show: false,
@@ -47,7 +50,7 @@ app.on('ready', () => {
         frame: false,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
-    // mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     globalShortcut.register('Shift+Alt+2', () => {
         if (mainWindow.isFocused()) {
@@ -65,21 +68,41 @@ app.on('ready', () => {
     tray.setContextMenu(contextMenu);
 });
 
-ipcMain.on('input-change', (event, backgroundName) => {
-    fs.readdir(backgroundDirectory, (error, files) => {
-        if (error) {
-            console.log(error);
-        } else {
-            const image = files.find((name) => name === backgroundName);
-            wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
-                desktopWindow.hide();
-                mainWindow.minimize();
-                mainWindow.hide();
-                event.sender.send('background-set', files);
-                ks.sendCombination(['windows', 'd']).then((a) => {});
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
-    });
+
+fs.readdir(backgroundDirectory, (error, files) => {
+    for (var i = 0; i < files.length; i++) {
+        directoryFiles.push(files[i]);
+    }
 });
+
+ipcMain.on('key-press', (event, text) => {
+    console.log(text);
+    let matchingFiles = [];
+    directoryFiles.forEach(file => {
+        // insert logic
+        matchingFiles.push(file);
+    });
+    console.log(matchingFiles);
+    event.sender.send('files-match', matchingFiles);
+});
+
+// ipcMain.on('input-change', (event, backgroundName) => {
+//     fs.readdir(backgroundDirectory, (error, files) => {
+//         if (error) {
+//             console.log(error);
+//         } else {
+//             const image = files.find((name) => name === backgroundName);
+//             wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
+//                 desktopWindow.hide();
+//                 mainWindow.minimize();
+//                 mainWindow.hide();
+//                 event.sender.send('background-set', files);
+//                 ks.sendCombination(['windows', 'd']).then((a) => {
+//                     console.log(a);
+//                 });
+//             }).catch((error) => {
+//                 console.log(error);
+//             });
+//         }
+//     });
+// });
