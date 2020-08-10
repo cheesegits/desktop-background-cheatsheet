@@ -8,6 +8,7 @@ const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('ele
 // const { dir } = require('console');
 
 const backgroundDirectory = path.join(__dirname, '../assets');
+const directoryFiles = [];
 
 let desktopWindow = null;
 let mainWindow = null;
@@ -27,7 +28,6 @@ app.on('ready', () => {
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
 
-    let directoryFiles = [];
 
     desktopWindow = new BrowserWindow({
         show: false,
