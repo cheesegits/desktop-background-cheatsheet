@@ -14,7 +14,6 @@ let desktopWindow = null;
 let mainWindow = null;
 let tray = null;
 
-
 app.on('ready', () => {
     const { screen } = require('electron'); // could not require() at the top of file, but this served as a work around
 
@@ -68,7 +67,6 @@ app.on('ready', () => {
     tray.setContextMenu(contextMenu);
 });
 
-
 fs.readdir(backgroundDirectory, (error, files) => {
     for (var i = 0; i < files.length; i++) {
         directoryFiles.push(files[i]);
@@ -76,11 +74,12 @@ fs.readdir(backgroundDirectory, (error, files) => {
 });
 
 ipcMain.on('key-press', (event, text) => {
-    console.log(text);
     let matchingFiles = [];
     directoryFiles.forEach(file => {
-        // insert logic
-        matchingFiles.push(file);
+        let x = file.search(`${text}`);
+        if (x == 0) {
+            matchingFiles.push(file);
+        }
     });
     console.log(matchingFiles);
     event.sender.send('files-match', matchingFiles);
