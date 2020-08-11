@@ -3,9 +3,8 @@ const path = require('path');
 
 const { app, BrowserWindow, ipcMain, Tray, Menu, globalShortcut } = require('electron');
 
-// const wallpaper = require('wallpaper');
-// const ks = require('node-key-sender');
-// const { dir } = require('console');
+const wallpaper = require('wallpaper');
+const ks = require('node-key-sender');
 
 const backgroundDirectory = path.join(__dirname, '../assets');
 const directoryFiles = [];
@@ -15,7 +14,7 @@ let mainWindow = null;
 let tray = null;
 
 app.on('ready', () => {
-    const { screen } = require('electron'); // could not require() at the top of file, but this served as a work around
+    const { screen } = require('electron');
 
     const contextMenu = Menu.buildFromTemplate([{
         label: 'Set Background Cheatsheet',
@@ -26,7 +25,6 @@ app.on('ready', () => {
     }]);
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
-
 
     desktopWindow = new BrowserWindow({
         show: false,
@@ -81,27 +79,26 @@ ipcMain.on('key-press', (event, text) => {
             matchingFiles.push(file);
         }
     });
-    console.log(matchingFiles);
     event.sender.send('files-match', matchingFiles);
 });
 
-// ipcMain.on('input-change', (event, backgroundName) => {
-//     fs.readdir(backgroundDirectory, (error, files) => {
-//         if (error) {
-//             console.log(error);
-//         } else {
-//             const image = files.find((name) => name === backgroundName);
-//             wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
-//                 desktopWindow.hide();
-//                 mainWindow.minimize();
-//                 mainWindow.hide();
-//                 event.sender.send('background-set', files);
-//                 ks.sendCombination(['windows', 'd']).then((a) => {
-//                     console.log(a);
-//                 });
-//             }).catch((error) => {
-//                 console.log(error);
-//             });
-//         }
-//     });
-// });
+ipcMain.on('input-change', (event, backgroundName) => {
+    fs.readdir(backgroundDirectory, (error, files) => {
+        if (error) {
+            console.log(error);
+        } else {
+            const image = files.find((name) => name === backgroundName);
+            wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
+                desktopWindow.hide();
+                mainWindow.minimize();
+                mainWindow.hide();
+                event.sender.send('background-set');
+                ks.sendCombination(['windows', 'd']).then((a) => {
+                    console.log(a);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    });
+});
