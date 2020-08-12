@@ -3,14 +3,22 @@ const { ipcRenderer } = require('electron');
 const input = document.querySelector('.input-field');
 const list = document.querySelector('#file-list');
 
-input.addEventListener('keypress', (event) => {
-    let text = document.getElementById('input-field').value;
+input.addEventListener('keyup', (event) => {
+    const text = document.getElementById('input-field').value;
+    console.log(text);
 
-    if (event.key === 'Enter') {
-        ipcRenderer.send('input-change', event.target.value);
-    } else {
-        text += event.key;
-        ipcRenderer.send('key-press', text);
+    switch (event.key) {
+        case 'Enter':
+            ipcRenderer.send('input-change', text);
+            break;
+        case 'Tab': // logic to autocomplete file name
+        case 'Control':
+        case 'Shift':
+        case 'Alt':
+            event.preventDefault();
+            break;
+        default:
+            ipcRenderer.send('key-press', text); // symbols like () trigger an error
     }
 
     ipcRenderer.on('files-match', (event, files) => {

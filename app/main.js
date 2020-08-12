@@ -35,7 +35,6 @@ app.on('ready', () => {
         focusable: false,
         frame: false,
     });
-
     mainWindow = new BrowserWindow({
         show: false,
         width: 800,
@@ -81,7 +80,6 @@ ipcMain.on('key-press', (event, text) => {
     });
     event.sender.send('files-match', matchingFiles);
 });
-
 ipcMain.on('input-change', (event, backgroundName) => {
     fs.readdir(backgroundDirectory, (error, files) => {
         if (error) {
