@@ -64,13 +64,13 @@ app.on('ready', () => {
     tray.setContextMenu(contextMenu);
 });
 
-fs.readdir(backgroundDirectory, (error, files) => {
+fs.readdir(backgroundDirectory, (_, files) => {
     for (var i = 0; i < files.length; i++) {
         directoryFiles.push(files[i]);
     }
 });
 
-ipcMain.on('key-press', (event, text) => {
+ipcMain.on('key-press', (_, text) => {
     let matchingFiles = [];
     directoryFiles.forEach(file => {
         let x = file.search(`${text}`);
