@@ -70,7 +70,7 @@ fs.readdir(backgroundDirectory, (_, files) => {
     }
 });
 
-ipcMain.on('key-press', (_, text) => {
+ipcMain.on('key-press', (event, text) => {
     let matchingFiles = [];
     directoryFiles.forEach(file => {
         let x = file.search(`${text}`);
