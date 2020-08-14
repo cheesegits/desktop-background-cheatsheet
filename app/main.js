@@ -73,7 +73,7 @@ fs.readdir(backgroundDirectory, (_, files) => {
 ipcMain.on('key-press', (event, text) => {
     let matchingFiles = [];
     directoryFiles.forEach(file => {
-        let x = file.search(`${text}`);
+        let x = file.search(`${text}`); // why does searching for '' yield all results?
         if (x == 0) {
             matchingFiles.push(file);
         }
