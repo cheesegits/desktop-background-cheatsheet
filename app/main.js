@@ -48,7 +48,7 @@ app.on('ready', () => {
     mainWindow.loadFile(`${__dirname}/index.html`);
     mainWindow.webContents.openDevTools();
 
-    globalShortcut.register('Shift+Alt+2', () => {
+    globalShortcut.register('Alt+D', () => {
         if (mainWindow.isFocused()) {
             desktopWindow.hide();
             mainWindow.minimize();
@@ -71,14 +71,18 @@ fs.readdir(backgroundDirectory, (_, files) => {
 });
 
 ipcMain.on('key-press', (event, text) => {
-    let matchingFiles = [];
-    directoryFiles.forEach(file => {
-        let x = file.search(`${text}`); // why does searching for '' yield all results?
-        if (x == 0) {
-            matchingFiles.push(file);
-        }
-    });
-    event.sender.send('files-match', matchingFiles);
+    const t = typeof text === 'string' && text === '' ? '' : text; // still need this logic if backspace no longer transmits to key-press?
+    console.log('firing from: ', t); // t = '' only after executing second empty backspace
+    // insert logic for mid-string match, not just beginning string
+    try {
+        const matchingFiles = directoryFiles.filter((files) => {
+            return files.toLowerCase().match(t.toLowerCase());
+        });
+        event.sender.send('files-match', matchingFiles); // sends whole list when nothing is in input
+
+    } catch (error) {
+        console.log('err', error);
+    }
 });
 ipcMain.on('input-change', (event, backgroundName) => {
     fs.readdir(backgroundDirectory, (error, files) => {
@@ -86,6 +90,9 @@ ipcMain.on('input-change', (event, backgroundName) => {
             console.log(error);
         } else {
             const image = files.find((name) => name === backgroundName);
+            if (!image) {
+                return;
+            }
             wallpaper.set(path.join(backgroundDirectory, image)).then(() => {
                 desktopWindow.hide();
                 mainWindow.minimize();

@@ -6,15 +6,21 @@ const list = document.querySelector('#file-list');
 let firstFile = '';
 
 input.addEventListener('keyup', (event) => {
-    const text = document.getElementById('input-field').value;
-
     switch (event.key) {
         case 'Enter':
-            ipcRenderer.send('input-change', text);
+            ipcRenderer.send('input-change', input.value);
             break;
         case 'Tab':
-            // when input is '', Tab auto-completes first item in array, even though first li is not highlighted
-            document.getElementById('input-field').value = firstFile;
+            if (input.value == '') {} else {
+                input.value = firstFile;
+            }
+            break;
+        case 'Backspace':
+            if (input.value == '') {
+                list.innerHTML = '';
+            } else {
+                ipcRenderer.send('key-press', input.value);
+            }
             break;
         case 'Control':
         case 'Shift':
@@ -22,7 +28,7 @@ input.addEventListener('keyup', (event) => {
             event.preventDefault();
             break;
         default:
-            ipcRenderer.send('key-press', text); // shift-symbol keystrokes like "(" trigger an error
+            ipcRenderer.send('key-press', input.value); // shift-symbol keystrokes like "(" trigger an error
     }
 
     ipcRenderer.on('files-match', (_, files) => {
@@ -34,11 +40,11 @@ input.addEventListener('keyup', (event) => {
             li.appendChild(document.createTextNode(files[i]));
             list.appendChild(li);
         }
-        if (text == '') {
-            document.getElementById(firstFile).style.backgroundColor = "#2e2c29";
+        if (input.value == '') {
+            list.innerHTML = '';
         } else {
             document.getElementById(firstFile).style.backgroundColor = "lightblue";
-        } // errors out at this line whenever Capital letter
+        }
     });
     ipcRenderer.on('background-set', (_) => {
         document.getElementById('input-field').value = '';
