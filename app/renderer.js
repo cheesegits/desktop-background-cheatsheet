@@ -34,6 +34,7 @@ input.addEventListener('keyup', (event) => {
     ipcRenderer.on('files-match', (_, files) => {
         firstFile = files[0];
         list.innerHTML = '';
+        console.log(files); // somehow grows n+1
         for (i = 0; i < files.length; i++) {
             const li = document.createElement('li');
             li.setAttribute('id', files[i]);
@@ -43,6 +44,7 @@ input.addEventListener('keyup', (event) => {
         if (input.value == '') {
             list.innerHTML = '';
         } else {
+            // insert logic for mid-string highlighting, not just whole string
             document.getElementById(firstFile).style.backgroundColor = "lightblue";
         }
     });
