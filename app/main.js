@@ -31,7 +31,7 @@ app.on('ready', () => {
         width: screenWidth,
         height: screenHeight,
         backgroundColor: '#2e2c29',
-        opacity: 0.4,
+        opacity: 0.8,
         focusable: false,
         frame: false,
     });
@@ -59,7 +59,7 @@ app.on('ready', () => {
         }
     });
 
-    tray = new Tray('Google-Chrome-Google-Chrome.ico');
+    tray = new Tray('Google-Chrome-Google-Chrome.ico'); // does not automatically remove tray icon on exit
     tray.setToolTip('~~MAKE NEW ICON~~');
     tray.setContextMenu(contextMenu);
 });
