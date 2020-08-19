@@ -71,11 +71,9 @@ fs.readdir(backgroundDirectory, (_, files) => {
 });
 
 ipcMain.on('key-press', (event, text) => {
-    const t = typeof text === 'string' && text === '' ? '' : text; // still need this logic if backspace no longer transmits to key-press?
-    console.log('firing from: ', t); // t = '' only after executing second empty backspace
     try {
         const matchingFiles = directoryFiles.filter((files) => {
-            return files.toLowerCase().match(t.toLowerCase());
+            return files.toLowerCase().match(text.toLowerCase());
         });
         event.sender.send('files-match', matchingFiles);
 

@@ -30,26 +30,25 @@ input.addEventListener('keyup', (event) => {
         default:
             ipcRenderer.send('key-press', input.value); // shift-symbol keystrokes like "(" trigger an error
     }
+});
 
-    ipcRenderer.on('files-match', (_, files) => {
-        firstFile = files[0];
+ipcRenderer.on('files-match', (_, files) => {
+    firstFile = files[0];
+    list.innerHTML = '';
+    for (i = 0; i < files.length; i++) {
+        const li = document.createElement('li');
+        li.setAttribute('id', files[i]);
+        li.appendChild(document.createTextNode(files[i]));
+        list.appendChild(li);
+    }
+    if (input.value == '') {
         list.innerHTML = '';
-        console.log(files); // somehow grows n+1
-        for (i = 0; i < files.length; i++) {
-            const li = document.createElement('li');
-            li.setAttribute('id', files[i]);
-            li.appendChild(document.createTextNode(files[i]));
-            list.appendChild(li);
-        }
-        if (input.value == '') {
-            list.innerHTML = '';
-        } else {
-            // insert logic for mid-string highlighting, not just whole string
-            document.getElementById(firstFile).style.backgroundColor = "lightblue";
-        }
-    });
-    ipcRenderer.on('background-set', (_) => {
-        document.getElementById('input-field').value = '';
-        list.innerHTML = '';
-    });
+    } else {
+        // insert logic for mid-string highlighting, not just whole string
+        document.getElementById(firstFile).style.backgroundColor = "lightblue";
+    }
+});
+ipcRenderer.on('background-set', (_) => {
+    document.getElementById('input-field').value = '';
+    list.innerHTML = '';
 });
