@@ -104,3 +104,6 @@ ipcMain.on('input-change', (event, backgroundName) => {
         }
     });
 });
+ipcMain.on('input-clicked', (event) => {
+    event.sender.send('all-files', directoryFiles);
+});
