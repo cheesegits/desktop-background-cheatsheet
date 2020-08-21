@@ -30,23 +30,23 @@ app.on('ready', () => {
         show: false,
         width: screenWidth,
         height: screenHeight,
-        backgroundColor: '#2e2c29',
-        opacity: 0.8,
+        backgroundColor: '#421b2d',
+        opacity: 0.6,
         focusable: false,
         frame: false,
     });
     mainWindow = new BrowserWindow({
         show: false,
-        width: 800,
-        height: 800,
+        width: 300,
+        height: 300,
         center: true,
-        backgroundColor: '#2e2c29',
+        backgroundColor: '#1b2d42',
         parent: desktopWindow,
         webPreferences: { nodeIntegration: true },
         frame: false,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
-    mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools();
 
     globalShortcut.register('Alt+D', () => {
         if (mainWindow.isFocused()) {

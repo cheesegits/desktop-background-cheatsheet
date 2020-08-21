@@ -1,0 +1,25 @@
+body {
+    font-family: 'Righteous', cursive;
+    color: rgba(255, 217, 0, 0.74);
+    /* text-align: center; */
+}
+
+ul {
+    padding-left: 7px;
+    list-style-type: none;
+    margin-top: 0px;
+    padding-top: 5px;
+    text-align: center;
+}
+
+.controls {
+    margin: 15px 15px 15px 7px;
+}
+
+#input-field {
+    width: 100%;
+    font-family: 'Righteous', cursive;
+    font-size: larger;
+    background-color: #421b2d;
+    color: #a08d96;
+}
