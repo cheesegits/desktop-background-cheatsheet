@@ -65,7 +65,6 @@ ipcRenderer.on('files-match', (_, matchingFiles) => {
         // insert logic for mid-string highlighting, not just whole string
         document.getElementById(firstFile).style.backgroundColor = "#421b2d";
         document.getElementById(firstFile).style.color = "white";
-
     }
 });
 ipcRenderer.on('background-set', (_) => {
