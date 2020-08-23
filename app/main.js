@@ -37,8 +37,8 @@ app.on('ready', () => {
     });
     mainWindow = new BrowserWindow({
         show: false,
-        width: 300, // 300 for production, 800 for development only
-        height: 300, // 300 for production, 800 for development only
+        width: 800, // 300 for production, 800 for development only
+        height: 800, // 300 for production, 800 for development only
         center: true,
         backgroundColor: '#1b2d42',
         parent: desktopWindow,
@@ -46,7 +46,7 @@ app.on('ready', () => {
         frame: false,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
-    // mainWindow.webContents.openDevTools(); // development only
+    mainWindow.webContents.openDevTools(); // development only
 
     globalShortcut.register('Alt+D', () => {
         if (mainWindow.isFocused()) {

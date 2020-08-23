@@ -11,6 +11,10 @@ ul {
     text-align: center;
 }
 
+li:hover {
+    background-color: #2d421b;
+}
+
 .controls {
     margin: 15px 15px 15px 7px;
 }

@@ -14,7 +14,6 @@ showFiles = (files) => {
         list.appendChild(li);
         document.getElementById(files[i]).innerHTML = `${files[i].substring(0, index)}<span class="highlight">${files[i].substring(index, index + inputValue.length)}</span>${files[i].substring(index+inputValue.length, files[i].length)}`;
     }
-    // insert functionality to hover highlight and select file with click
     if (inputValue == '') {
         list.style.backgroundColor = "#1b2d42";
     } else {
@@ -46,7 +45,7 @@ input.addEventListener('keyup', (event) => {
             event.preventDefault();
             break;
         default:
-            ipcRenderer.send('key-press', input.value); // shift-symbol keystrokes like "(" trigger an error
+            ipcRenderer.send('key-press', input.value); // issue: shift-symbol keystrokes like "(" trigger an error
             inputValue = input.value;
     }
 });
@@ -54,6 +53,10 @@ input.addEventListener('click', () => {
     if (input.value == '') {
         ipcRenderer.send('input-clicked');
     }
+});
+
+list.addEventListener('click', (event) => {
+    ipcRenderer.send('input-change', event.target.id);
 });
 
 ipcRenderer.on('all-files', (_, allFiles) => {
