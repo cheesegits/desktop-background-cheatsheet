@@ -4,17 +4,26 @@ const input = document.querySelector('.input-field');
 const list = document.querySelector('#file-list');
 
 let firstFile = '';
+let inputValue = '';
 
 showFiles = (files) => {
     for (i = 0; i < files.length; i++) {
         const li = document.createElement('li');
+        const index = files[i].indexOf(inputValue);
         li.setAttribute('id', files[i]);
-        li.appendChild(document.createTextNode(files[i]));
         list.appendChild(li);
+        document.getElementById(files[i]).innerHTML = `${files[i].substring(0, index)}<span class="highlight">${files[i].substring(index, index + inputValue.length)}</span>${files[i].substring(index+inputValue.length, files[i].length)}`;
     }
-}
+    // insert functionality to hover highlight and select file with click
+    if (inputValue == '') {
+        list.style.backgroundColor = "#1b2d42";
+    } else {
+        document.getElementById(firstFile).style.backgroundColor = "#2d421b";
+    }
+};
 
 input.addEventListener('keyup', (event) => {
+    inputValue = input.value; // double check/rework all the other input.value inside cases below
     switch (event.key) {
         case 'Enter':
             ipcRenderer.send('input-change', input.value);
@@ -28,7 +37,7 @@ input.addEventListener('keyup', (event) => {
             if (input.value == '') {
                 list.innerHTML = '';
             } else {
-                ipcRenderer.send('key-press', input.value);
+                ipcRenderer.send('key-press', inputValue);
             }
             break;
         case 'Control':
@@ -38,6 +47,7 @@ input.addEventListener('keyup', (event) => {
             break;
         default:
             ipcRenderer.send('key-press', input.value); // shift-symbol keystrokes like "(" trigger an error
+            inputValue = input.value;
     }
 });
 input.addEventListener('click', () => {
@@ -57,14 +67,11 @@ ipcRenderer.on('all-files', (_, allFiles) => {
 });
 ipcRenderer.on('files-match', (_, matchingFiles) => {
     firstFile = matchingFiles[0];
+    input.value = inputValue;
     list.innerHTML = '';
     showFiles(matchingFiles);
     if (input.value == '') {
         list.innerHTML = '';
-    } else {
-        // insert logic for mid-string highlighting, not just whole string
-        document.getElementById(firstFile).style.backgroundColor = "#421b2d";
-        document.getElementById(firstFile).style.color = "white";
     }
 });
 ipcRenderer.on('background-set', (_) => {

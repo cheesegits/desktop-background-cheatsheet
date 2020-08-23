@@ -37,8 +37,8 @@ app.on('ready', () => {
     });
     mainWindow = new BrowserWindow({
         show: false,
-        width: 300,
-        height: 300,
+        width: 300, // 300 for production, 800 for development only
+        height: 300, // 300 for production, 800 for development only
         center: true,
         backgroundColor: '#1b2d42',
         parent: desktopWindow,
@@ -46,7 +46,7 @@ app.on('ready', () => {
         frame: false,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
-    // mainWindow.webContents.openDevTools();
+    // mainWindow.webContents.openDevTools(); // development only
 
     globalShortcut.register('Alt+D', () => {
         if (mainWindow.isFocused()) {
@@ -59,7 +59,7 @@ app.on('ready', () => {
         }
     });
 
-    tray = new Tray('Google-Chrome-Google-Chrome.ico'); // does not automatically remove tray icon on exit
+    tray = new Tray('Google-Chrome-Google-Chrome.ico'); // issue: does not automatically remove tray icon on exit
     tray.setToolTip('~~MAKE NEW ICON~~');
     tray.setContextMenu(contextMenu);
 });

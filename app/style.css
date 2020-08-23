@@ -1,7 +1,6 @@
 body {
     font-family: 'Righteous', cursive;
     color: rgba(255, 217, 0, 0.74);
-    /* text-align: center; */
 }
 
 ul {
@@ -22,4 +21,9 @@ ul {
     font-size: larger;
     background-color: #421b2d;
     color: #a08d96;
+}
+
+.highlight {
+    background-color: #421b2d;
+    color: white;
 }
