@@ -52,13 +52,13 @@ input.addEventListener('keyup', (event) => {
 
         // convert into switch, or if/else for seperate logic ok?
         if (increment == 1 && highlightedIndex == undefined) { // when down is pushed and nothing is highlighted
-            newIndex = listFiles.length - 1;
+            newIndex = 0;
         } else if (increment == -1 && highlightedIndex == undefined) { // when up is pushed and nothing is highlighted
-            newIndex = 0;
-        } else if (increment == -1 && highlightedIndex == 0) { // when up is pushed and the top line is highlighted
-            newIndex = 0;
-        } else if (increment == 1 && highlightedIndex == listFiles.length - 1) { // when down is pushed and the bottom line is highlighted
             newIndex = listFiles.length - 1;
+        } else if (increment == -1 && highlightedIndex == 0) { // when up is pushed and the top line is highlighted
+            newIndex = listFiles.length - 1;
+        } else if (increment == 1 && highlightedIndex == listFiles.length - 1) { // when down is pushed and the bottom line is highlighted
+            newIndex = 0;
         } else {
             newIndex = highlightedIndex + increment; //, else move up or down through the rest of the list
         }
