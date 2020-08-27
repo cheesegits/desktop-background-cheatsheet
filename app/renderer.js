@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 
-const input = document.querySelector('.input-field');
+const input = document.querySelector('.input');
 const list = document.querySelector('#file-list');
 
 let firstFile = '';

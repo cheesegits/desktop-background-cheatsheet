@@ -26,24 +26,27 @@ app.on('ready', () => {
 
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
 
+
     desktopWindow = new BrowserWindow({
         show: false,
         width: screenWidth,
         height: screenHeight,
-        backgroundColor: '#421b2d',
-        opacity: 0.6,
+        backgroundColor: '#103b73',
+        opacity: 0.95,
         focusable: false,
         frame: false,
     });
     mainWindow = new BrowserWindow({
         show: false,
-        width: 300, // 300 for production, 800 for development only
-        height: 300, // 300 for production, 800 for development only
-        center: true,
-        backgroundColor: '#1b2d42',
         parent: desktopWindow,
-        webPreferences: { nodeIntegration: true },
+        webPreferences: { nodeIntegration: true, textAreasAreResizable: false },
         frame: false,
+        hasShadow: false,
+        transparent: true,
+        resizable: false,
+        x: screenWidth / 2 - 150,
+        y: screenHeight / 2 - 150,
+        useContentSize: true,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
     // mainWindow.webContents.openDevTools(); // development only
