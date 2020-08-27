@@ -31,8 +31,8 @@ app.on('ready', () => {
         show: false,
         width: screenWidth,
         height: screenHeight,
-        backgroundColor: '#103b73',
-        opacity: 0.95,
+        backgroundColor: '#133337',
+        opacity: 0.75,
         focusable: false,
         frame: false,
     });
@@ -42,6 +42,7 @@ app.on('ready', () => {
         webPreferences: { nodeIntegration: true, textAreasAreResizable: false },
         frame: false,
         hasShadow: false,
+        backgroundColor: '#0056b9', // development only
         transparent: true,
         resizable: false,
         x: screenWidth / 2 - 150,
@@ -49,7 +50,7 @@ app.on('ready', () => {
         useContentSize: true,
     });
     mainWindow.loadFile(`${__dirname}/index.html`);
-    // mainWindow.webContents.openDevTools(); // development only
+    mainWindow.webContents.openDevTools(); // development only
 
     globalShortcut.register('Alt+D', () => {
         if (mainWindow.isFocused()) {
