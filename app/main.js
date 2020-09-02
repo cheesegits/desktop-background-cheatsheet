@@ -32,7 +32,7 @@ app.on('ready', () => {
         width: screenWidth,
         height: screenHeight,
         backgroundColor: '#133337',
-        opacity: 0.75,
+        opacity: 0.90, // production 0.9ish
         focusable: false,
         frame: false,
     });

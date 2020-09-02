@@ -30,11 +30,15 @@ ul li {
     color: #fff;
 }
 
+input:focus {
+    border-radius: 0;
+}
+
 ul li:hover {
     background-color: #175ca1;
     cursor: pointer;
 }
 
-input:focus {
-    border-radius: 0;
+.highlight {
+    background-color: #175ca1;
 }
